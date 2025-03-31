@@ -1,4 +1,6 @@
 using Messages;
+using Monitoring;
+using System.Diagnostics;
 
 namespace API.Services;
 
@@ -13,12 +15,18 @@ public class LanguageService
     
     private LanguageService()
     { }
-    
+
     public LanguageResponse GetLanguages()
     {
-        return new LanguageResponse
-        {
-            Languages = GreetingService.Instance.GetLanguages()
-        };
+        using var activity = MonitorService.ActivitySource.StartActivity("LanguageService.GetLanguages");
+        
+            MonitorService.Log.Debug("Entered 'GetLanguages' in LanguageService");
+
+            return new LanguageResponse
+            {
+                Languages = GreetingService.Instance.GetLanguages()
+            };
+        
     }
+
 }
